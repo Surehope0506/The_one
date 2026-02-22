@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>学生信息管理系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Noto Sans SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      display: inline-block;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgb(13 148 136 / 0.15);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.5rem 1.25rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.05s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-hover);
+    }
+
+    .btn-edit {
+      background: var(--primary);
+      color: white;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-edit:hover {
+      background: var(--primary-hover);
+    }
+
+    .search-bar {
+      margin-bottom: 1rem;
+    }
+
+    .search-bar input {
+      width: 100%;
+      max-width: 320px;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .search-bar input::placeholder {
+      color: var(--text-muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th,
+    td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tr:hover {
+      background: #f8fafc;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge {
+      background: var(--card);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-badge strong {
+      color: var(--primary);
+      margin-right: 0.25rem;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        font-size: 0.8rem;
+      }
+
+      th,
+      td {
+        padding: 0.5rem;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>学生信息管理系统</h1>
+      <p>添加、编辑、查询学生信息，数据本地保存</p>
+    </header>
+
+    <div class="stats">
+      <span class="stat-badge">共 <strong id="totalCount">0</strong> 名学生</span>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">添加 / 编辑学生</h2>
+      <form id="studentForm">
+        <input type="hidden" id="editId" name="editId" value="" />
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">姓名 *</label>
+            <input type="text" id="name" name="name" placeholder="请输入姓名" required />
+          </div>
+          <div class="form-group">
+            <label for="studentId">学号 *</label>
+            <input type="text" id="studentId" name="studentId" placeholder="请输入学号" required />
+          </div>
+          <div class="form-group">
+            <label for="className">班级</label>
+            <input type="text" id="className" name="className" placeholder="如：一班" />
+          </div>
+          <div class="form-group">
+            <label for="major">专业</label>
+            <input type="text" id="major" name="major" placeholder="如：计算机科学" />
+          </div>
+          <div class="form-group">
+            <label for="gender">性别</label>
+            <select id="gender" name="gender">
+              <option value="">请选择</option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="phone">联系电话</label>
+            <input type="tel" id="phone" name="phone" placeholder="手机号" />
+          </div>
+          <div class="form-group">
+            <label for="email">邮箱</label>
+            <input type="email" id="email" name="email" placeholder="email@example.com" />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">保存</button>
+            <button type="button" id="cancelBtn" class="btn btn-secondary" style="display: none">取消</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">学生列表</h2>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="搜索姓名、学号或班级..." />
+      </div>
+      <table id="studentTable">
+        <thead>
+          <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>班级</th>
+            <th>专业</th>
+            <th>性别</th>
+            <th>电话</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody"></tbody>
+      </table>
+      <div id="emptyState" class="empty-state" style="display: none">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <p>暂无学生数据，点击上方表单添加第一条记录</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "student_management_data";
+    let students = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    let editingId = null;
+
+    const form = document.getElementById("studentForm");
+    const tableBody = document.getElementById("studentTableBody");
+    const searchInput = document.getElementById("searchInput");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const emptyState = document.getElementById("emptyState");
+    const totalCountEl = document.getElementById("totalCount");
+
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+      updateStats();
+    }
+
+    function updateStats() {
+      totalCountEl.textContent = students.length;
+    }
+
+    function render(filteredList = null) {
+      const list = filteredList !== null ? filteredList : students;
+      tableBody.innerHTML = "";
+
+      if (list.length === 0) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
+
+      list.forEach((s) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${escapeHtml(s.studentId)}</td>
+          <td>${escapeHtml(s.name)}</td>
+          <td>${escapeHtml(s.className || "-")}</td>
+          <td>${escapeHtml(s.major || "-")}</td>
+          <td>${escapeHtml(s.gender || "-")}</td>
+          <td>${escapeHtml(s.phone || "-")}</td>
+          <td class="actions">
+            <button class="btn btn-edit" data-edit="${s.id}">编辑</button>
+            <button class="btn btn-danger" data-delete="${s.id}">删除</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+
+      tableBody.querySelectorAll("[data-edit]").forEach((btn) => {
+        btn.addEventListener("click", () => editStudent(btn.dataset.edit));
+      });
+      tableBody.querySelectorAll("[data-delete]").forEach((btn) => {
+        btn.addEventListener("click", () => deleteStudent(btn.dataset.delete));
+      });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function editStudent(id) {
+      const s = students.find((x) => x.id === id);
+      if (!s) return;
+      editingId = id;
+      document.getElementById("editId").value = id;
+      document.getElementById("name").value = s.name;
+      document.getElementById("studentId").value = s.studentId;
+      document.getElementById("className").value = s.className || "";
+      document.getElementById("major").value = s.major || "";
+      document.getElementById("gender").value = s.gender || "";
+      document.getElementById("phone").value = s.phone || "";
+      document.getElementById("email").value = s.email || "";
+      cancelBtn.style.display = "inline-block";
+    }
+
+    function deleteStudent(id) {
+      if (!confirm("确定要删除该学生吗？")) return;
+      students = students.filter((s) => s.id !== id);
+      if (editingId === id) {
+        cancelEdit();
+      }
+      save();
+      render();
+      applySearch();
+    }
+
+    function cancelEdit() {
+      editingId = null;
+      document.getElementById("editId").value = "";
+      form.reset();
+      cancelBtn.style.display = "none";
+    }
+
+    function applySearch() {
+      const kw = searchInput.value.trim().toLowerCase();
+      if (!kw) {
+        render();
+        return;
+      }
+      const filtered = students.filter(
+        (s) =>
+          (s.name && s.name.toLowerCase().includes(kw)) ||
+          (s.studentId && s.studentId.toLowerCase().includes(kw)) ||
+          (s.className && s.className.toLowerCase().includes(kw)) ||
+          (s.major && s.major.toLowerCase().includes(kw))
+      );
+      render(filtered);
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const id = document.getElementById("editId").value;
+      const data = {
+        id: id || generateId(),
+        name: document.getElementById("name").value.trim(),
+        studentId: document.getElementById("studentId").value.trim(),
+        className: document.getElementById("className").value.trim(),
+        major: document.getElementById("major").value.trim(),
+        gender: document.getElementById("gender").value,
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+      };
+
+      if (id) {
+        const idx = students.findIndex((s) => s.id === id);
+        if (idx >= 0) students[idx] = data;
+      } else {
+        const exists = students.some((s) => s.studentId === data.studentId);
+        if (exists) {
+          alert("该学号已存在，请勿重复添加。");
+          return;
+        }
+        students.push(data);
+      }
+
+      save();
+      cancelEdit();
+      render();
+      applySearch();
+    });
+
+    cancelBtn.addEventListener("click", cancelEdit);
+
+    searchInput.addEventListener("input", () => {
+      applySearch();
+    });
+
+    updateStats();
+    render();
+  </script>
+</body>
+</html>
